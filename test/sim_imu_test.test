@@ -1,0 +1,3 @@
+<launch>
+    <test pkg="tether_manager" test-name="sim_imu_test" type="sim_imu_test" />
+</launch>

@@ -7,7 +7,12 @@ project(tether_manager)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED
+  roscpp
+  rospy
+  std_msgs
+  geometry_msgs
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -112,9 +117,25 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  include
 )
+
+add_executable(sim_imu_node src/sim_imu_node.cpp)
+
+add_dependencies(sim_imu_node ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(
+  sim_imu_node
+  ${catkin_LIBRARIES} yaml-cpp
+)
+
+install(
+    TARGETS sim_imu_node
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -200,3 +221,23 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+if(CATKIN_ENABLE_TESTING)
+  #find_package(rostest REQUIRED)
+
+  #catkin_add_gmock(
+  #  sim_imu_test
+  #  test/sim_imu_test.cpp
+  #)
+  #target_link_libraries(sim_imu_test ${catkin_LIBRARIES})
+
+  find_package(rostest REQUIRED)
+
+  add_rostest_gtest(sim_imu_test
+                    test/sim_imu_test.test
+                    ${SRC_FILES}
+                    test/sim_imu_test.cpp
+                    )
+  target_link_libraries(sim_imu_test ${catkin_LIBRARIES})
+endif()
+

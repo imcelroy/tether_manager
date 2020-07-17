@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!-- declare argument -->
+    <arg name="node_name" default="sim_imu_node" doc="sim_imu node name" />
+    <arg name="param_file" default="$(find tether_manager)/config/sim_imu.yaml" doc="yaml parameter file path"/>
+
+    <!-- Stan sim_imu node -->
+    <node pkg="tether_manager" type="sim_imu_node" name="$(arg node_name)">
+        <rosparam command="load" file="$(arg param_file)" />
+    </node>
+
+    <node name="tether_turn_counter" pkg="tether_manager" type="tether_turn_counter.py" output="screen"></node>
+
+</launch>
